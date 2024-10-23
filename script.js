@@ -10,13 +10,22 @@ const alteraTitulo = document.querySelector('.app__title', 'app__title-strong');
 const botoes = document.querySelectorAll('.app__card-button');
 const tocarMusica = document.querySelector('#alternar-musica');
 const musica = new Audio('/sons/1-08. Minecraft.mp3');
-musica.loop = true ; // aqui faz com que a musica fique em loop repetindo assim que acabar.
+const startPauseBotoes = document.querySelector('#start-pause');
+musica.loop = true; // aqui faz com que a musica fique em loop repetindo assim que acabar.
 
-tocarMusica.addEventListener('change',()=> {
-  if(musica.paused){
+let tempoDecorridoEmSegundos = 5;
+let intervaloId = null;
+
+const audioPause = new Audio('/sons/pause.mp3');
+const audioPlay = new Audio('/sons/play.wav');
+const audioAlertaFim = new Audio('/sons/beep.mp3');
+
+tocarMusica.addEventListener('change', () => {
+  if (musica.paused) {
     musica.play();
-  }else {
+  } else {
     musica.pause();
+
   }
 })
 
@@ -44,7 +53,7 @@ longoBotao.addEventListener('click', () => {
 })
 
 function alteraContexto(contexto, novoTexto) {
-  botoes.forEach(function(contexto){
+  botoes.forEach(function (contexto) {
     contexto.classList.remove('active');
   })
   html.setAttribute('data-contexto', contexto);
@@ -72,5 +81,39 @@ function alteraContexto(contexto, novoTexto) {
 
   }
 
+}
+
+const contagemRegressiva = () => {
+
+  if (tempoDecorridoEmSegundos <= 0) {
+    zerarTempo();
+    alert('Fim de tempo!')
+    return
+  }
+
+  tempoDecorridoEmSegundos -= 1;
+  console.log('Temporizador:' + tempoDecorridoEmSegundos);
+}
+
+startPauseBotoes.addEventListener('click', iniciarPausar);
+
+function iniciarPausar() {
+
+  if (intervaloId) {
+    zerarTempo();
+    return;
+  }
+
+  audioPlay.play();
+  
+  intervaloId = setInterval(contagemRegressiva, 1000)
+
+}
+
+
+function zerarTempo() {
+  audioPause.play();
+  clearInterval(intervaloId);
+  intervaloId = null;
 }
 
