@@ -163,6 +163,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     padding: 2.8rem 6rem;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     background: #010B15;
 }
@@ -176,6 +177,17 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
     line-height: 150%;
 }
+.meuNomeCopyRigth {
+    color: rgba(182, 182, 182, 0.8);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    text-align: center;
+    margin: 0;
+  }
 
 /* toggle */
 .toggle {

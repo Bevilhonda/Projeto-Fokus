@@ -12,8 +12,11 @@ const tocarMusica = document.querySelector('#alternar-musica');
 const musica = new Audio('/sons/1-08. Minecraft.mp3');
 const startPauseBotoes = document.querySelector('#start-pause');
 musica.loop = true; // aqui faz com que a musica fique em loop repetindo assim que acabar.
+const nomeBotaoComecarOuPausar = document.querySelector('#start-pause span');
+const iconeDePause = document.querySelector('.app__card-primary-butto-icon');
+const tempoNaTela = document.querySelector('#timer');
 
-let tempoDecorridoEmSegundos = 5;
+let tempoDecorridoEmSegundos = 1500 ;
 let intervaloId = null;
 
 const audioPause = new Audio('/sons/pause.mp3');
@@ -35,27 +38,35 @@ e passando outra função do javascript que altera o atributo com o nome de
 serAttribute , veja que foi alterado o foco do HTML pelo descanso-curto do CSS*/
 
 focoBotao.addEventListener('click', () => {
+  tempoDecorridoEmSegundos = 1500 ;
   alteraContexto('foco');
   focoBotao.classList.add('active');
+  
 
 })
 
 curtoBotao.addEventListener('click', () => {
+  tempoDecorridoEmSegundos = 300 ;
   alteraContexto('descanso-curto');
   curtoBotao.classList.add('active');
+  
 
 })
 
 longoBotao.addEventListener('click', () => {
+  tempoDecorridoEmSegundos = 900 ;
   alteraContexto('descanso-longo')
   longoBotao.classList.add('active');
-
+  
 })
 
 function alteraContexto(contexto, novoTexto) {
+  mostrarTempo();
   botoes.forEach(function (contexto) {
     contexto.classList.remove('active');
+    
   })
+
   html.setAttribute('data-contexto', contexto);
   bannerImagem.setAttribute('src', `/imagens/${contexto}.png`);
 
@@ -86,13 +97,17 @@ function alteraContexto(contexto, novoTexto) {
 const contagemRegressiva = () => {
 
   if (tempoDecorridoEmSegundos <= 0) {
-    zerarTempo();
+  
+    if(tempoDecorridoEmSegundos == 0 ){
+      audioAlertaFim.play();
+    }
     alert('Fim de tempo!')
+    zerarTempo();
     return
   }
 
   tempoDecorridoEmSegundos -= 1;
-  console.log('Temporizador:' + tempoDecorridoEmSegundos);
+  mostrarTempo();
 }
 
 startPauseBotoes.addEventListener('click', iniciarPausar);
@@ -105,15 +120,27 @@ function iniciarPausar() {
   }
 
   audioPlay.play();
-  
-  intervaloId = setInterval(contagemRegressiva, 1000)
+
+  intervaloId = setInterval(contagemRegressiva, 1000);
+
+  nomeBotaoComecarOuPausar.textContent = "Pausar";
+  iconeDePause.setAttribute('src',`/imagens/pause.png`);
 
 }
-
 
 function zerarTempo() {
   audioPause.play();
   clearInterval(intervaloId);
+  nomeBotaoComecarOuPausar.textContent = "Começar";
+  iconeDePause.setAttribute('src',`/imagens/play_arrow.png`);
   intervaloId = null;
 }
+
+function mostrarTempo(){
+  const tempo = new Date(tempoDecorridoEmSegundos * 1000) ;
+  const tempoFormatado = tempo.toLocaleString('pt-Br',{minute: '2-digit',second:'2-digit'}); 
+  tempoNaTela.innerHTML = `${tempoFormatado}`;
+}
+
+mostrarTempo();
 
